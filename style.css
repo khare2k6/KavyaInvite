@@ -46,7 +46,8 @@ html, body, #app {
     display: none !important;
 }
 
-#stage {
+#landingStage,
+#pianoStage {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -88,10 +89,13 @@ html, body, #app {
 
 #pianoContainer {
     position: absolute;
-    bottom: 40px;
-    width: 650px;
-    max-width: 90vw;
+    left: 50%;
+    bottom: 55px;
+    transform: translateX(-50%);
+    width: 620px;
+    max-width: 92vw;
     text-align: center;
+    z-index: 10;
 }
 
 #status {
@@ -104,17 +108,19 @@ html, body, #app {
 #piano {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
+    margin-top: 20px;
 }
 
 .key {
-    width: 80px;
-    height: 220px;
-    background: white;
-    border-radius: 10px;
+    width: 86px;
+    height: 245px;
+    background: #fafafa;
+    border-radius: 12px;
     cursor: pointer;
-    border: 3px solid #ddd;
-    transition: .15s;
+    border: 2px solid #ddd;
+    transition: .12s;
+    box-shadow: 0 6px 10px rgba(0,0,0,.25);
 }
 
     .key:hover {
@@ -122,9 +128,9 @@ html, body, #app {
     }
 
     .key.active {
-        background: #ffd54f;
+        background: #ffe15b;
         transform: translateY(10px);
-        box-shadow: 0 0 35px #ffd54f;
+        box-shadow: 0 0 30px gold,0 12px 25px rgba(0,0,0,.3);
     }
 
 /****************
