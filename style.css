@@ -87,51 +87,50 @@ html, body, #app {
  Piano
 ****************/
 
-#pianoContainer {
-    position: absolute;
-    left: 50%;
-    bottom: 55px;
-    transform: translateX(-50%);
-    width: 620px;
-    max-width: 92vw;
-    text-align: center;
-    z-index: 10;
+#pianoContainer{
+    position:absolute;
+    left:50%;
+    top:130px;
+    transform:translateX(-50%);
+    width:560px;
+    text-align:center;
+    z-index:20;
 }
 
-#status {
-    color: white;
-    font-size: 28px;
-    margin-bottom: 18px;
-    text-shadow: 0 0 15px black;
+#status{
+    color:white;
+    font-size:22px;
+    margin-bottom:15px;
+    text-shadow:0 0 12px black;
 }
 
-#piano {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
+#piano{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin-top:18px;
 }
 
-.key {
-    width: 86px;
-    height: 245px;
-    background: #fafafa;
-    border-radius: 12px;
-    cursor: pointer;
-    border: 2px solid #ddd;
-    transition: .12s;
-    box-shadow: 0 6px 10px rgba(0,0,0,.25);
+.key{
+    width:62px;
+    height:175px;
+    background:white;
+    border-radius:8px;
+    cursor:pointer;
+    border:2px solid #ddd;
+    transition:.15s;
+    box-shadow:0 4px 8px rgba(0,0,0,.25);
 }
 
     .key:hover {
         transform: translateY(-3px);
     }
 
-    .key.active {
-        background: #ffe15b;
-        transform: translateY(10px);
-        box-shadow: 0 0 30px gold,0 12px 25px rgba(0,0,0,.3);
-    }
+    .key.active{
+    background:#ffd54f;
+    transform:translateY(6px);
+    box-shadow:0 0 20px gold,0 6px 18px rgba(0,0,0,.3);
+}
 
 /****************
  Invite
