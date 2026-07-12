@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavya's Piano Recital & Birthday</title>
+    <title>Kavya's Birthday</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +12,14 @@
         <!-- Landing -->
         <section id="landing">
 
-            <img id="landingStage" src="assets/stage.png" alt="Stage">
+            <picture>
+                <source media="(max-width:768px)"
+                        srcset="assets/stage-mobile.png">
+
+                <img id="landingStage"
+                     src="assets/stage-landscape.png"
+                     alt="Stage">
+            </picture>
 
             <div id="landingOverlay">
 
@@ -27,7 +34,14 @@
         <!-- Piano Screen -->
         <section id="pianoScreen" class="hidden">
 
-            <img id="pianoStage" src="assets/piano_scene.png" alt="Piano Stage">
+            <picture>
+                <source media="(max-width:768px)"
+                        srcset="assets/piano-mobile.png">
+
+                <img id="pianoStage"
+                     src="assets/piano-landscape.png"
+                     alt="Piano Stage">
+            </picture>
 
             <div id="pianoContainer">
 
