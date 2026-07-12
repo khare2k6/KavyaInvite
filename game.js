@@ -281,3 +281,70 @@ success = async()=>{
     inviteScreen.classList.remove("hidden");
 
 }
+/* ==========================================================
+   Floating Balloons
+========================================================== */
+
+const balloonLayer = document.createElement("div");
+balloonLayer.id = "balloonLayer";
+document.body.appendChild(balloonLayer);
+
+const balloonIcons = [
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈",
+    "🎈"
+];
+
+function spawnBalloon(){
+
+    const b = document.createElement("div");
+
+    b.className = "balloon";
+
+    b.textContent =
+        balloonIcons[Math.floor(Math.random()*balloonIcons.length)];
+
+    const fromLeft = Math.random() < 0.5;
+
+    if(fromLeft){
+
+        b.style.left =
+            (20 + Math.random()*120) + "px";
+
+    }else{
+
+        b.style.right =
+            (20 + Math.random()*120) + "px";
+
+    }
+
+    b.style.fontSize =
+        (40 + Math.random()*35) + "px";
+
+    b.style.animationDuration =
+        (8 + Math.random()*6) + "s";
+
+    b.style.setProperty(
+        "--drift",
+        (Math.random()*180-90)+"px"
+    );
+
+    balloonLayer.appendChild(b);
+
+    setTimeout(()=>{
+
+        b.remove();
+
+    },15000);
+
+}
+
+setInterval(spawnBalloon,900);
+
+for(let i=0;i<8;i++){
+
+    setTimeout(spawnBalloon,i*500);
+
+}
