@@ -1,72 +1,283 @@
-const canvas=document.getElementById('game');
-const ctx=canvas.getContext('2d');
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
-addEventListener('resize',resize);resize();
+/* ==========================================================
+   Kavya's Piano Recital
+   Version 1 - Part 1
+========================================================== */
 
-const overlay=document.getElementById('overlay');
-const invite=document.getElementById('invite');
-const startBtn=document.getElementById('startBtn');
-const again=document.getElementById('playAgain');
+const landing = document.getElementById("landing");
+const pianoScreen = document.getElementById("pianoScreen");
+const inviteScreen = document.getElementById("inviteScreen");
 
-const params=new URLSearchParams(location.search);
-const guest=params.get('guest');
-if(guest) document.getElementById('greeting').textContent=`Hi ${guest}! Help Gauri unlock her invitation!`;
+const startBtn = document.getElementById("startBtn");
+const status = document.getElementById("status");
 
-let running=false;
-let score=0;
-let player={x:80,y:0,vy:0};
-let stars=[];
+const keys = [...document.querySelectorAll(".key")];
 
-function reset(){
- score=0;
- player.y=canvas.height-120;
- player.vy=0;
- stars=[];
- for(let i=0;i<8;i++) stars.push({x:450+i*180,y:120+Math.random()*(canvas.height-250)});
+const melody = [0,0,1,0,3,2];
+
+let player=[];
+let accepting=false;
+
+const AudioContextClass =
+window.AudioContext ||
+window.webkitAudioContext;
+
+const audio =
+new AudioContextClass();
+
+const notes=[
+261.63,
+293.66,
+349.23,
+392.00,
+440.00
+];
+
+function sleep(ms){
+
+    return new Promise(r=>setTimeout(r,ms));
+
 }
-reset();
 
-startBtn.onclick=()=>{
- overlay.classList.add('hidden');
- invite.classList.add('hidden');
- reset();
- running=true;
+function playTone(note){
+
+    const osc=audio.createOscillator();
+    const gain=audio.createGain();
+
+    osc.type="triangle";
+
+    osc.frequency.value=notes[note];
+
+    osc.connect(gain);
+
+    gain.connect(audio.destination);
+
+    gain.gain.setValueAtTime(.25,audio.currentTime);
+
+    gain.gain.exponentialRampToValueAtTime(
+
+        0.0001,
+
+        audio.currentTime+.45
+
+    );
+
+    osc.start();
+
+    osc.stop(audio.currentTime+.45);
+
+}
+
+async function flash(index){
+
+    playTone(index);
+
+    keys[index].classList.add("active");
+
+    await sleep(350);
+
+    keys[index].classList.remove("active");
+
+    await sleep(120);
+
+}
+
+async function playMelody(){
+
+    accepting=false;
+
+    status.innerHTML="🎵 Listen Carefully";
+
+    await sleep(800);
+
+    for(const note of melody){
+
+        await flash(note);
+
+    }
+
+    status.innerHTML="🎹 Your Turn";
+
+    player=[];
+
+    accepting=true;
+
+}
+
+startBtn.onclick=async()=>{
+
+    if(audio.state==="suspended")
+        await audio.resume();
+
+    landing.classList.add("hidden");
+
+    pianoScreen.classList.remove("hidden");
+
+    playMelody();
+
 };
 
-again.onclick=()=>location.reload();
+/* ==========================================================
+   Version 1 - Part 2
+========================================================== */
 
-addEventListener('pointerdown',()=>{
- if(running && player.y>=canvas.height-120) player.vy=-14;
-});
+async function wrongKey(){
 
-function tick(){
- requestAnimationFrame(tick);
- ctx.clearRect(0,0,canvas.width,canvas.height);
+    accepting=false;
 
- ctx.fillStyle='#86d686';
- ctx.fillRect(0,canvas.height-70,canvas.width,70);
+    status.innerHTML="❌ Oops! Try Again";
 
- if(running){
-   player.vy+=0.8;
-   player.y+=player.vy;
-   if(player.y>canvas.height-120){player.y=canvas.height-120;player.vy=0;}
-   stars.forEach(s=>s.x-=4);
-   stars=stars.filter(s=>{
-      ctx.font='28px serif';
-      if(Math.hypot(s.x-(player.x+15),s.y-(player.y+15))<30){score++;return false;}
-      return s.x>-30;
-   });
-   if(score>=8){running=false;invite.classList.remove('hidden');}
- }
+    await sleep(1000);
 
- stars.forEach(s=>{ctx.font='28px serif';ctx.fillText('⭐',s.x,s.y);});
- ctx.beginPath();
- ctx.fillStyle='#ff69b4';
- ctx.arc(player.x+15,player.y+15,15,0,Math.PI*2);
- ctx.fill();
+    playMelody();
 
- ctx.fillStyle='#222';
- ctx.font='20px sans-serif';
- ctx.fillText(`⭐ ${score}/8`,20,35);
 }
-tick();
+
+async function success(){
+
+    accepting=false;
+
+    status.innerHTML="🎉 Perfect!";
+
+    await sleep(1200);
+
+    pianoScreen.classList.add("hidden");
+
+    inviteScreen.classList.remove("hidden");
+
+}
+
+keys.forEach((key,index)=>{
+
+    key.addEventListener("click",async()=>{
+
+        if(!accepting) return;
+
+        await flash(index);
+
+        player.push(index);
+
+        const current=player.length-1;
+
+        if(player[current]!==melody[current]){
+
+            wrongKey();
+
+            return;
+
+        }
+
+        if(player.length===melody.length){
+
+            success();
+
+        }
+
+    });
+
+});
+/* ==========================================================
+   Version 1 - Part 3
+========================================================== */
+
+const mapBtn = document.getElementById("mapBtn");
+const rsvpBtn = document.getElementById("rsvpBtn");
+
+if(mapBtn){
+
+    mapBtn.addEventListener("click",()=>{
+
+        // TODO: Replace with your Google Maps link
+        window.open(
+            "https://maps.google.com",
+            "_blank"
+        );
+
+    });
+
+}
+
+if(rsvpBtn){
+
+    rsvpBtn.addEventListener("click",()=>{
+
+        // TODO: Replace with your WhatsApp number
+        window.open(
+            "https://wa.me/919902041200",
+            "_blank"
+        );
+
+    });
+
+}
+
+
+/* ---------- Simple celebration ---------- */
+
+function burst(){
+
+    for(let i=0;i<25;i++){
+
+        const s=document.createElement("div");
+
+        s.style.position="fixed";
+        s.style.left=(50+Math.random()*30-15)+"vw";
+        s.style.top=(40+Math.random()*20-10)+"vh";
+
+        s.style.width="10px";
+        s.style.height="10px";
+
+        s.style.borderRadius="50%";
+
+        s.style.background=[
+            "#ff4d6d",
+            "#ffd93d",
+            "#6bcBef",
+            "#8bc34a",
+            "#d16bff"
+        ][Math.floor(Math.random()*5)];
+
+        s.style.pointerEvents="none";
+
+        s.style.transition="all 1.8s ease-out";
+
+        document.body.appendChild(s);
+
+        requestAnimationFrame(()=>{
+
+            s.style.transform=
+            `translate(${Math.random()*500-250}px,
+                        ${Math.random()*500-250}px)
+             scale(.2)`;
+
+            s.style.opacity="0";
+
+        });
+
+        setTimeout(()=>{
+
+            s.remove();
+
+        },1800);
+
+    }
+
+}
+
+
+/* replace success() */
+
+success = async()=>{
+
+    accepting=false;
+
+    status.innerHTML="🎉 Excellent!";
+
+    burst();
+
+    await sleep(1400);
+
+    pianoScreen.classList.add("hidden");
+
+    inviteScreen.classList.remove("hidden");
+
+}
