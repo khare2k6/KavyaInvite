@@ -1,69 +1,56 @@
 /* ==========================================================
-   Kavya's Piano Recital
-   Version 1 - Part 1
+   Kavya's Birthday
+   Part 1
 ========================================================== */
 
-const landing = document.getElementById("landing");
-const pianoScreen = document.getElementById("pianoScreen");
-const inviteScreen = document.getElementById("inviteScreen");
+const landing=document.getElementById("landing");
+const pianoScreen=document.getElementById("pianoScreen");
+const inviteScreen=document.getElementById("inviteScreen");
 
-const startBtn = document.getElementById("startBtn");
-const status = document.getElementById("status");
+const startBtn=document.getElementById("startBtn");
+const status=document.getElementById("status");
 
-const keys = [...document.querySelectorAll(".key")];
+const keys=[...document.querySelectorAll(".key")];
 
-const melody = [0,0,1,0,3,2];
+const melody=[0,0,1,0,3,2]
 
 let player=[];
 let accepting=false;
 
-const AudioContextClass =
-window.AudioContext ||
-window.webkitAudioContext;
+/* -----------------------------
+   WAV Piano Sounds
+------------------------------ */
 
-const audio =
-new AudioContextClass();
+const sounds=[
+"C4",
+"D4",
+"E4",
+"F4",
+"G4",
+"A4"
+].map(name=>{
 
-const notes=[
-261.63,
-293.66,
-349.23,
-392.00,
-440.00
-];
+    const a=new Audio(`assets/audio/${name}.mp3`);
+
+    a.preload="auto";
+
+    return a;
+
+});
+
+function playTone(note){
+
+    const s=sounds[note].cloneNode();
+
+    s.volume=.95;
+
+    s.play().catch(()=>{});
+
+}
 
 function sleep(ms){
 
     return new Promise(r=>setTimeout(r,ms));
-
-}
-
-function playTone(note){
-
-    const osc=audio.createOscillator();
-    const gain=audio.createGain();
-
-    osc.type="triangle";
-
-    osc.frequency.value=notes[note];
-
-    osc.connect(gain);
-
-    gain.connect(audio.destination);
-
-    gain.gain.setValueAtTime(.25,audio.currentTime);
-
-    gain.gain.exponentialRampToValueAtTime(
-
-        0.0001,
-
-        audio.currentTime+.45
-
-    );
-
-    osc.start();
-
-    osc.stop(audio.currentTime+.45);
 
 }
 
@@ -73,7 +60,7 @@ async function flash(index){
 
     keys[index].classList.add("active");
 
-    await sleep(350);
+    await sleep(320);
 
     keys[index].classList.remove("active");
 
@@ -87,7 +74,7 @@ async function playMelody(){
 
     status.innerHTML="🎵 Listen Carefully";
 
-    await sleep(800);
+    await sleep(700);
 
     for(const note of melody){
 
@@ -95,7 +82,7 @@ async function playMelody(){
 
     }
 
-    status.innerHTML="🎹 Your Turn";
+    status.innerHTML="🎹 Repeat the Melody";
 
     player=[];
 
@@ -104,9 +91,6 @@ async function playMelody(){
 }
 
 startBtn.onclick=async()=>{
-
-    if(audio.state==="suspended")
-        await audio.resume();
 
     landing.classList.add("hidden");
 
@@ -117,14 +101,14 @@ startBtn.onclick=async()=>{
 };
 
 /* ==========================================================
-   Version 1 - Part 2
+   Part 2
 ========================================================== */
 
 async function wrongKey(){
 
     accepting=false;
 
-    status.innerHTML="❌ Oops! Try Again";
+    status.innerHTML="❌ Try Again";
 
     await sleep(1000);
 
@@ -136,9 +120,11 @@ async function success(){
 
     accepting=false;
 
-    status.innerHTML="🎉 Perfect!";
+    status.innerHTML="🎉 Excellent!";
 
-    await sleep(1200);
+    burst();
+
+    await sleep(1400);
 
     pianoScreen.classList.add("hidden");
 
@@ -175,20 +161,20 @@ keys.forEach((key,index)=>{
     });
 
 });
+
 /* ==========================================================
-   Version 1 - Part 3
+   Part 3 - Maps / RSVP
 ========================================================== */
 
-const mapBtn = document.getElementById("mapBtn");
-const rsvpBtn = document.getElementById("rsvpBtn");
+const mapBtn=document.getElementById("mapBtn");
+const rsvpBtn=document.getElementById("rsvpBtn");
 
 if(mapBtn){
 
     mapBtn.addEventListener("click",()=>{
 
-        // TODO: Replace with your Google Maps link
         window.open(
-            "https://maps.google.com",
+            "https://maps.google.com/?q=Funky+Island+Pacific+Mall+Jasola",
             "_blank"
         );
 
@@ -200,7 +186,6 @@ if(rsvpBtn){
 
     rsvpBtn.addEventListener("click",()=>{
 
-        // TODO: Replace with your WhatsApp number
         window.open(
             "https://wa.me/919902041200",
             "_blank"
@@ -211,11 +196,13 @@ if(rsvpBtn){
 }
 
 
-/* ---------- Simple celebration ---------- */
+/* ==========================================================
+   Celebration Confetti
+========================================================== */
 
 function burst(){
 
-    for(let i=0;i<25;i++){
+    for(let i=0;i<30;i++){
 
         const s=document.createElement("div");
 
@@ -237,6 +224,7 @@ function burst(){
         ][Math.floor(Math.random()*5)];
 
         s.style.pointerEvents="none";
+        s.style.zIndex="999";
 
         s.style.transition="all 1.8s ease-out";
 
@@ -245,9 +233,10 @@ function burst(){
         requestAnimationFrame(()=>{
 
             s.style.transform=
-            `translate(${Math.random()*500-250}px,
-                        ${Math.random()*500-250}px)
-             scale(.2)`;
+            `translate(${Math.random()*600-300}px,
+                        ${Math.random()*600-300}px)
+             scale(.2)
+             rotate(${Math.random()*720}deg)`;
 
             s.style.opacity="0";
 
@@ -264,71 +253,51 @@ function burst(){
 }
 
 
-/* replace success() */
-
-success = async()=>{
-
-    accepting=false;
-
-    status.innerHTML="🎉 Excellent!";
-
-    burst();
-
-    await sleep(1400);
-
-    pianoScreen.classList.add("hidden");
-
-    inviteScreen.classList.remove("hidden");
-
-}
 /* ==========================================================
    Floating Balloons
 ========================================================== */
 
-const balloonLayer = document.createElement("div");
-balloonLayer.id = "balloonLayer";
+const balloonLayer=document.createElement("div");
+balloonLayer.id="balloonLayer";
 document.body.appendChild(balloonLayer);
 
-const balloonIcons = [
-    "🎈",
-    "🎈",
-    "🎈",
-    "🎈",
-    "🎈"
+/* Change these to PNGs later if you want */
+const balloons=[
+"🎈",
+"🎈",
+"🎈",
+"🎈",
+"🎈"
 ];
 
 function spawnBalloon(){
 
-    const b = document.createElement("div");
+    const b=document.createElement("div");
 
-    b.className = "balloon";
+    b.className="balloon";
 
-    b.textContent =
-        balloonIcons[Math.floor(Math.random()*balloonIcons.length)];
+    b.textContent=
+        balloons[Math.floor(Math.random()*balloons.length)];
 
-    const fromLeft = Math.random() < 0.5;
+    if(Math.random()<0.5){
 
-    if(fromLeft){
-
-        b.style.left =
-            (20 + Math.random()*120) + "px";
+        b.style.left=(20+Math.random()*120)+"px";
 
     }else{
 
-        b.style.right =
-            (20 + Math.random()*120) + "px";
+        b.style.right=(20+Math.random()*120)+"px";
 
     }
 
-    b.style.fontSize =
-        (40 + Math.random()*35) + "px";
+    b.style.fontSize=
+        (40+Math.random()*35)+"px";
 
-    b.style.animationDuration =
-        (8 + Math.random()*6) + "s";
+    b.style.animationDuration=
+        (8+Math.random()*6)+"s";
 
     b.style.setProperty(
         "--drift",
-        (Math.random()*180-90)+"px"
+        (Math.random()*220-110)+"px"
     );
 
     balloonLayer.appendChild(b);
@@ -345,6 +314,6 @@ setInterval(spawnBalloon,900);
 
 for(let i=0;i<8;i++){
 
-    setTimeout(spawnBalloon,i*500);
+    setTimeout(spawnBalloon,i*450);
 
 }
