@@ -99,7 +99,7 @@ html, body, #app {
     left: 50%;
     top: 130px;
     transform: translateX(-50%);
-    width: 560px;
+    width: min(560px, 96vw);
     text-align: center;
     z-index: 20;
 }
@@ -114,12 +114,15 @@ html, body, #app {
 #piano {
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: clamp(2px, 0.8vw, 6px);
     margin-top: 18px;
+    width: 100%;
 }
 
 .key {
-    width: 62px;
+    flex: 1;
+    min-width: 0;
+    max-width: 62px;
     height: 175px;
     background: white;
     border-radius: 8px;
@@ -213,5 +216,24 @@ html, body, #app {
     100% {
         transform: translateY(-120vh) translateX(var(--drift)) rotate(18deg);
         opacity: 0;
+    }
+}
+
+
+/****************
+ Mobile
+****************/
+@media (max-width: 768px) {
+    #pianoContainer {
+        top: 90px;
+        width: 96vw;
+    }
+
+    #status {
+        font-size: 18px;
+    }
+
+    .key {
+        height: 130px;
     }
 }
