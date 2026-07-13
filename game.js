@@ -27,7 +27,8 @@ const sounds=[
 "E4",
 "F4",
 "G4",
-"A4"
+"A4",
+"B4"
 ].map(name=>{
 
     const a=new Audio(`assets/audio/${name}.mp3`);
