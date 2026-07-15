@@ -12,7 +12,25 @@ const status=document.getElementById("status");
 
 const keys=[...document.querySelectorAll(".key")];
 
-const melody=[0,0,1,0,3,2]
+const levels = [
+
+    [0,0,1,0,3,2],          // Happy Birthday...
+           // ...to you
+
+    [0,0,1,0,4,3],          // Happy Birthday...
+              // ...to you
+
+    [0,0,6,5,3,2,1],          // Happy Birthday Dear...
+
+               // ...Kavya
+
+  [5,5,3,2,3,2]        // Happy Birthday to you
+
+];
+
+let currentLevel = 0;
+
+let melody = levels[currentLevel];
 
 let player=[];
 let accepting=false;
@@ -119,13 +137,31 @@ async function wrongKey(){
 
 async function success(){
 
-    accepting=false;
-
-    status.innerHTML="🎉 Excellent!";
+    accepting = false;
 
     burst();
 
-    await sleep(1400);
+    currentLevel++;
+
+    if(currentLevel < levels.length){
+
+        status.innerHTML =
+            `🎉 Great! Round ${currentLevel+1}`;
+
+        await sleep(1200);
+
+        melody = levels[currentLevel];
+
+        playMelody();
+
+        return;
+
+    }
+
+    status.innerHTML =
+        "🎂 You unlocked the invitation!";
+
+    await sleep(1500);
 
     pianoScreen.classList.add("hidden");
 
