@@ -20,11 +20,11 @@ const levels = [
     [0,0,1,0,4,3],          // Happy Birthday...
               // ...to you
 
-    [0,0,6,5,3,2,1],          // Happy Birthday Dear...
+    //[0,0,6,5,3,2,1],          // Happy Birthday Dear...
 
                // ...Kavya
 
-  [5,5,3,2,3,2]        // Happy Birthday to you
+ // [5,5,3,2,3,2]        // Happy Birthday to you
 
 ];
 
